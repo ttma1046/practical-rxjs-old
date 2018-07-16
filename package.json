@@ -1,0 +1,20 @@
+{
+  "name": "practial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lesson.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "rxjs": "^6.2.2",
+    "webpack": "^4.16.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.0.8"
+  }
+}
