@@ -8,8 +8,23 @@ function print(val) {
 // const { Observable, Observer, interval, fromEvent, Subject, ReplaySubject, from, of , range, throwError } = rxjs;
 // const { map, filter, switchMap, tap, scan, catchError } = rxjs.operators;
 
-import { Observable, fromEvent, from, timer, interval, of } from 'rxjs';
-import { map, filter, switchMap, fromPromise, publish, finalize, tap, first, last, throttleTime, debounceTime, scan, takeUntil, takeWhile} from 'rxjs/operators';
+import { Observable, fromEvent, from, timer, interval, of, zip } from 'rxjs';
+import { 
+    map, 
+    filter, 
+    switchMap,
+    fromPromise, 
+    publish, 
+    finalize, 
+    tap, 
+    first, 
+    last, 
+    throttleTime, 
+    debounceTime, 
+    scan, 
+    takeUntil, 
+    takeWhile, 
+    forkJoin } from 'rxjs/operators';
 
 const observable = Observable.create((observer) => {
     observer.next('hello');
@@ -156,8 +171,30 @@ namestakewhile.pipe(
     finalize(() => print('Complete! I found Doug')))
     .subscribe(i => print(i));
 
+const yin = of('peanut butter', 'wine', 'rainbows');
+const yang = of('jelly', 'cheese', 'unicorns');
+
+const combo = zip(yin, yang);
+
+combo.subscribe(arr => print(arr));
 
 
+const yin = of('peanut butter', 'wine', 'rainbows');
+const yang = of('jelly', 'cheese', 'unicorns').delay(2000);
+
+const combo = forkJoin(yin, yang);
+
+combo.subscribe(arr => print(arr));
+
+const observable = Observable.create(observer => {
+    observer.next('good');
+    observer.next('great');
+    observer.next('grand');
+
+    throwError 'catch me!'
+
+    observer.next('wonderful')
+})
 
 
 
