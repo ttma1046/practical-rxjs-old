@@ -8,7 +8,18 @@ function print(val) {
 // const { Observable, Observer, interval, fromEvent, Subject, ReplaySubject, from, of , range, throwError } = rxjs;
 // const { map, filter, switchMap, tap, scan, catchError } = rxjs.operators;
 
-import { Observable, fromEvent, from, timer, interval, of, zip } from 'rxjs';
+import { 
+    Observable,
+    fromEvent,
+    from, 
+    timer, 
+    interval, 
+    of, 
+    zip, 
+    forkJoin, 
+    throwError, 
+    Subject } from 'rxjs';
+    
 import { 
     map, 
     filter, 
@@ -23,9 +34,12 @@ import {
     debounceTime, 
     scan, 
     takeUntil, 
-    takeWhile, 
-    forkJoin } from 'rxjs/operators';
-
+    takeWhile,
+    catchError,
+    delay,
+    retry,
+    multicast } from 'rxjs/operators';
+/*
 const observable = Observable.create((observer) => {
     observer.next('hello');
     observer.next('world');
@@ -148,15 +162,13 @@ gameClicks.pipe(
     scan((highScore, score) => highScore + score))
 .subscribe(highScore => print(`High Score ${highScore}`));
 
-/*
+
 let intervalClicks = fromEvent(document, 'click');
 
 clicks.pipe(
     switchMap(click => {
         return interval(500)
     })).subscribe(i => print(i));
-
-*/
 
 const intervaltick = interval(500);
 const notifier = timer(2000);
@@ -178,23 +190,50 @@ const combo = zip(yin, yang);
 
 combo.subscribe(arr => print(arr));
 
+const yinv2 = of('peanut butter', 'wine', 'rainbows');
+const yangv2 = of('jelly', 'cheese', 'unicorns').pipe(delay(2000));
 
-const yin = of('peanut butter', 'wine', 'rainbows');
-const yang = of('jelly', 'cheese', 'unicorns').delay(2000);
+const combov2 = forkJoin(yin, yang);
 
-const combo = forkJoin(yin, yang);
+combov2.subscribe(arr => print(arr));
+*/
+/*
+const throwErrorObservable = throwError('catch me!');
+throwErrorObservable.pipe(
+    catchError(err => print(`Error caught: ${err}`)),
+    retry(2))
+.subscribe(val => print(val), e => print(e));
 
-combo.subscribe(arr => print(arr));
+*/
 
-const observable = Observable.create(observer => {
-    observer.next('good');
-    observer.next('great');
-    observer.next('grand');
+const subject = new Subject();
+const subA = subject.subscribe(val => print(`Sub A: ${val}`));
+const subB = subject.subscribe(val => print(`Sub B: ${val}`));
 
-    throwError 'catch me!'
+subject.next('Hello');
 
-    observer.next('wonderful')
-})
+setTimeout(() => {
+    subject.next('World');
+}, 1000);
+
+const observableforMulticast = fromEvent(document, 'click');
+
+const clicks = observableforMulticast.pipe(
+    tap(_ => print('Do One Time!')),
+    multicast(() => new Subject())
+);
+
+const subAformulti = clicks.subscribe(c => print(`Sub A: ${c.timeStamp}`));
+const subBformulti = clicks.subscribe(c => print(`Sub B: ${c.timeStamp}`));
+
+clicks.connect();
+
+
+
+
+
+
+
 
 
 
