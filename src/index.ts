@@ -1,13 +1,3 @@
-function print(val) {
-    let el = document.createElement('p');
-    el.innerText = val;
-    document.body.appendChild(el);
-}
-
-
-// const { Observable, Observer, interval, fromEvent, Subject, ReplaySubject, from, of , range, throwError } = rxjs;
-// const { map, filter, switchMap, tap, scan, catchError } = rxjs.operators;
-
 import { 
     Observable,
     fromEvent,
@@ -24,7 +14,6 @@ import {
     map, 
     filter, 
     switchMap,
-    fromPromise, 
     publish, 
     finalize, 
     tap, 
@@ -39,7 +28,13 @@ import {
     delay,
     retry,
     multicast } from 'rxjs/operators';
-/*
+
+function print(val: string) {
+    let el = document.createElement('p');
+    el.innerText = val;
+    document.body.appendChild(el);
+}
+
 const observable = Observable.create((observer) => {
     observer.next('hello');
     observer.next('world');
@@ -66,9 +61,9 @@ const alarmclock = timer(1000);
 
 alarmclock.subscribe(done => print('ding!!!'));
 
-// const myinterval = interval(1000);
+const myinterval = interval(1000);
 
-// myinterval.subscribe(int => print(new Date().getSeconds()));
+myinterval.subscribe(int => print(new Date().getSeconds()));
 
 const mashup = of ('anything', ['you', 'want'], 23, true, { cool: 'stuff' });
 
@@ -196,15 +191,12 @@ const yangv2 = of('jelly', 'cheese', 'unicorns').pipe(delay(2000));
 const combov2 = forkJoin(yin, yang);
 
 combov2.subscribe(arr => print(arr));
-*/
-/*
+
 const throwErrorObservable = throwError('catch me!');
 throwErrorObservable.pipe(
     catchError(err => print(`Error caught: ${err}`)),
     retry(2))
 .subscribe(val => print(val), e => print(e));
-
-*/
 
 const subject = new Subject();
 const subA = subject.subscribe(val => print(`Sub A: ${val}`));
