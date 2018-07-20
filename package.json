@@ -4,9 +4,7 @@
   "description": "",
   "main": "lesson.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "start": "webpack-dev-server --mode development"
+    "build": "webpack"
   },
   "keywords": [],
   "author": "",
@@ -15,8 +13,7 @@
     "rxjs": "^6.2.2",
     "ts-loader": "^4.4.2",
     "typescript": "^2.9.2",
-    "webpack": "^4.16.1",
-    "webpack-dev-server": "^3.1.4"
+    "webpack": "^4.16.1"
   },
   "devDependencies": {
     "webpack-cli": "^3.1.0"
