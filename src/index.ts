@@ -1,34 +1,37 @@
-import { 
+import {
     Observable,
     Observer,
     fromEvent,
-    from, 
-    timer, 
-    interval, 
-    of, 
-    zip, 
-    forkJoin, 
-    throwError, 
-    Subject } from 'rxjs';
-    
-import { 
-    map, 
-    filter, 
+    from,
+    timer,
+    interval,
+    of,
+    zip,
+    forkJoin,
+    throwError,
+    Subject
+} from 'rxjs';
+
+import {
+    map,
+    filter,
     switchMap,
-    publish, 
-    finalize, 
-    tap, 
-    first, 
-    last, 
-    throttleTime, 
-    debounceTime, 
-    scan, 
-    takeUntil, 
+    mergeMap,
+    publish,
+    finalize,
+    tap,
+    first,
+    last,
+    throttleTime,
+    debounceTime,
+    scan,
+    takeUntil,
     takeWhile,
     catchError,
     delay,
     retry,
-    multicast } from 'rxjs/operators';
+    multicast
+} from 'rxjs/operators';
 
 function print(val: string) {
     let el = document.createElement('p');
@@ -221,3 +224,21 @@ const subAformulti = multiCastClicks.subscribe((c: any) => print(`Sub A: ${c.tim
 const subBformulti = multiCastClicks.subscribe((c: any) => print(`Sub B: ${c.timeStamp}`));
 
 multiCastClicks.connect();
+
+const input1 = document.querySelector('#input1');
+const input2 = document.querySelector('#input2');
+
+const span = document.querySelector('span');
+
+const obsInput1 = fromEvent(input1, 'input');
+const obsInput2 = fromEvent(input2, 'input');
+
+obsInput1.pipe(
+    mergeMap(
+        event1 => obsInput2.pipe(
+            map(event2 => (<HTMLInputElement>event1.target).value + ' ' + (<HTMLInputElement>event2.target).value)
+        )
+    )
+).subscribe(
+    combinedValue => { span.textContent = combinedValue;console.log('test'); }
+);
