@@ -1,5 +1,6 @@
 import { 
     Observable,
+    Observer,
     fromEvent,
     from, 
     timer, 
@@ -35,13 +36,14 @@ function print(val: string) {
     document.body.appendChild(el);
 }
 
-const observable = Observable.create((observer) => {
+const observable = Observable.create((observer: Observer<string>) => {
     observer.next('hello');
     observer.next('world');
     observer.next('Test');
+    observer.complete();
 })
 
-observable.subscribe((val) => print(val));
+observable.subscribe((val: string) => print(val));
 
 const clicks = fromEvent(document, 'click');
 
@@ -55,7 +57,7 @@ const promise = new Promise((resolve, reject) => {
 
 const obsvPromise = from(promise);
 
-obsvPromise.subscribe(result => print(result));
+obsvPromise.subscribe((result: string) => print(result));
 
 const alarmclock = timer(1000);
 
@@ -63,36 +65,36 @@ alarmclock.subscribe(done => print('ding!!!'));
 
 const myinterval = interval(1000);
 
-myinterval.subscribe(int => print(new Date().getSeconds()));
+myinterval.subscribe(int => print((new Date().getSeconds()).toString()));
 
 const mashup = of ('anything', ['you', 'want'], 23, true, { cool: 'stuff' });
 
 mashup.subscribe(mashup => print(JSON.stringify(mashup)));
 
-const cold = Observable.create(observer => {
+const cold = Observable.create((observer: Observer<number>) => {
     observer.next(Math.random())
 })
 
-cold.subscribe(a => print(`Subscriber A: ${a}`))
-cold.subscribe(b => print(`Subscriber B: ${b}`))
+cold.subscribe((a: number) => print(`Subscriber A: ${a}`))
+cold.subscribe((b: number) => print(`Subscriber B: ${b}`))
 
 const x = Math.random();
-const hot = Observable.create(observer => {
+const hot = Observable.create((observer: Observer<number>) => {
     observer.next(x);
 })
 
-hot.subscribe(a => print(`Subscriber A: ${a}`))
-hot.subscribe(b => print(`Subscriber B: ${b}`))
+hot.subscribe((a: number) => print(`Subscriber A: ${a}`))
+hot.subscribe((b: number) => print(`Subscriber B: ${b}`))
 
 
-const cold2 = Observable.create(observer => {
+const cold2 = Observable.create((observer: Observer<number>) => {
     observer.next(Math.random())
 })
 
 const hot2 = cold2.pipe(publish());
 
-hot2.subscribe(a => print(`Subscriber A: ${a}`))
-hot2.subscribe(b => print(`Subscriber B: ${b}`))
+hot2.subscribe((a: number) => print(`Subscriber A: ${a}`))
+hot2.subscribe((b: number) => print(`Subscriber B: ${b}`))
 
 hot2.connect();
 
@@ -112,7 +114,7 @@ const numbers = of(10, 100, 1000);
 
 numbers.pipe(
     map(num => Math.log(num)))
-    .subscribe(x => print(x));
+    .subscribe(x => print(x.toString()));
 
 const jsonString = '{ "type": "Dog", "breed": "Pug" }';
 const apiCall = of(jsonString);
@@ -135,11 +137,11 @@ names
 const numbersv2 = of(-3, 5, 7, 2, -7, 9, -2);
 
 numbersv2.pipe(
-    filter(n => n >= 0)).subscribe(n => print(n));
+    filter(n => n >= 0)).subscribe(n => print(n.toString()));
 
-numbersv2.pipe(first()).subscribe(n => print(n));
+numbersv2.pipe(first()).subscribe(n => print(n.toString()));
 
-numbersv2.pipe(last()).subscribe(n => print(n));
+numbersv2.pipe(last()).subscribe(n => print(n.toString()));
 
 let mouseEvents = fromEvent(document, 'mousemove');
 
@@ -152,7 +154,7 @@ mouseEvents.pipe(debounceTime(1000))
 let gameClicks = fromEvent(document, 'click');
 
 gameClicks.pipe(
-    map(e => parseInt(Math.random() * 10)),
+    map(e => parseInt((Math.random() * 10).toString(), 10)),
     tap(score => print(`Click scored + ${score}`)),
     scan((highScore, score) => highScore + score))
 .subscribe(highScore => print(`High Score ${highScore}`));
@@ -160,10 +162,10 @@ gameClicks.pipe(
 
 let intervalClicks = fromEvent(document, 'click');
 
-clicks.pipe(
+intervalClicks.pipe(
     switchMap(click => {
         return interval(500)
-    })).subscribe(i => print(i));
+    })).subscribe(i => print(i.toString()));
 
 const intervaltick = interval(500);
 const notifier = timer(2000);
@@ -183,20 +185,20 @@ const yang = of('jelly', 'cheese', 'unicorns');
 
 const combo = zip(yin, yang);
 
-combo.subscribe(arr => print(arr));
+combo.subscribe(arr => print(arr.toString()));
 
 const yinv2 = of('peanut butter', 'wine', 'rainbows');
 const yangv2 = of('jelly', 'cheese', 'unicorns').pipe(delay(2000));
 
 const combov2 = forkJoin(yin, yang);
 
-combov2.subscribe(arr => print(arr));
+combov2.subscribe(arr => print(arr.toString()));
 
 const throwErrorObservable = throwError('catch me!');
 throwErrorObservable.pipe(
-    catchError(err => print(`Error caught: ${err}`)),
+    catchError(err => of(`Error caught: ${err}`)),
     retry(2))
-.subscribe(val => print(val), e => print(e));
+.subscribe((val: string) => print(val), e => print(e));
 
 const subject = new Subject();
 const subA = subject.subscribe(val => print(`Sub A: ${val}`));
@@ -210,12 +212,12 @@ setTimeout(() => {
 
 const observableforMulticast = fromEvent(document, 'click');
 
-const clicks = observableforMulticast.pipe(
+const multiCastClicks: any = observableforMulticast.pipe(
     tap(_ => print('Do One Time!')),
     multicast(() => new Subject())
 );
 
-const subAformulti = clicks.subscribe(c => print(`Sub A: ${c.timeStamp}`));
-const subBformulti = clicks.subscribe(c => print(`Sub B: ${c.timeStamp}`));
+const subAformulti = multiCastClicks.subscribe((c: any) => print(`Sub A: ${c.timeStamp}`));
+const subBformulti = multiCastClicks.subscribe((c: any) => print(`Sub B: ${c.timeStamp}`));
 
-clicks.connect();
+multiCastClicks.connect();
