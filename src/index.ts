@@ -39,7 +39,7 @@ function print(val: string) {
     document.body.appendChild(el);
 }
 
-/*
+
 const observable = Observable.create((observer: Observer<string>) => {
     observer.next('hello');
     observer.next('world');
@@ -243,7 +243,7 @@ obsInput1.pipe(
 ).subscribe(
     combinedValue => { span.textContent = combinedValue; console.log('test'); }
 );
-*/
+
 
 const numbersMerge1 = of(1, 2, 3);
 
