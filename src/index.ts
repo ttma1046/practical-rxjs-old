@@ -39,6 +39,7 @@ function print(val: string) {
     document.body.appendChild(el);
 }
 
+/*
 const observable = Observable.create((observer: Observer<string>) => {
     observer.next('hello');
     observer.next('world');
@@ -70,7 +71,7 @@ const myinterval = interval(1000);
 
 myinterval.subscribe(int => print((new Date().getSeconds()).toString()));
 
-const mashup = of ('anything', ['you', 'want'], 23, true, { cool: 'stuff' });
+const mashup = of('anything', ['you', 'want'], 23, true, { cool: 'stuff' });
 
 mashup.subscribe(mashup => print(JSON.stringify(mashup)));
 
@@ -123,16 +124,16 @@ const jsonString = '{ "type": "Dog", "breed": "Pug" }';
 const apiCall = of(jsonString);
 
 apiCall.pipe(map(json => JSON.parse(json)))
-.subscribe(obj => {
-    print(obj.type);
-    print(obj.breed);
-})
+    .subscribe(obj => {
+        print(obj.type);
+        print(obj.breed);
+    })
 
 const names = of('Simon', 'Garfunkle');
 
 names
     .pipe(
-        tap(name => print(name)), 
+        tap(name => print(name)),
         map(name => name.toUpperCase()),
         tap(name => print(name)))
     .subscribe();
@@ -160,7 +161,7 @@ gameClicks.pipe(
     map(e => parseInt((Math.random() * 10).toString(), 10)),
     tap(score => print(`Click scored + ${score}`)),
     scan((highScore, score) => highScore + score))
-.subscribe(highScore => print(`High Score ${highScore}`));
+    .subscribe(highScore => print(`High Score ${highScore}`));
 
 
 let intervalClicks = fromEvent(document, 'click');
@@ -201,7 +202,7 @@ const throwErrorObservable = throwError('catch me!');
 throwErrorObservable.pipe(
     catchError(err => of(`Error caught: ${err}`)),
     retry(2))
-.subscribe((val: string) => print(val), e => print(e));
+    .subscribe((val: string) => print(val), e => print(e));
 
 const subject = new Subject();
 const subA = subject.subscribe(val => print(`Sub A: ${val}`));
@@ -240,5 +241,21 @@ obsInput1.pipe(
         )
     )
 ).subscribe(
-    combinedValue => { span.textContent = combinedValue;console.log('test'); }
+    combinedValue => { span.textContent = combinedValue; console.log('test'); }
 );
+*/
+
+const numbersMerge1 = of(1, 2, 3);
+
+const numbersMerge2 = of(5, 10, 15);
+
+numbersMerge1.pipe(
+    mergeMap(
+        number1 => numbersMerge2.pipe(
+            map(number2 => number1 * number2)
+        )
+    )
+).subscribe(
+    combined => print(combined.toString())
+);
+
